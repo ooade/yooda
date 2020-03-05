@@ -1,0 +1,44 @@
+{
+	"name": "yooda",
+	"version": "0.1.0",
+	"description": "A tiny validation library for your app",
+	"source": "src/index.ts",
+	"main": "build/index.js",
+	"module": "build/yooda.module.js",
+	"umd": "build/yooda.umd.js",
+	"types": "build/index.d.ts",
+	"scripts": {
+		"test": "ts-node node_modules/tape/bin/tape __test__/**/*.ts | tap-spec",
+		"build": "rollup -c rollup.config.js",
+		"prepublish": "npm test && npm run build"
+	},
+	"files": [
+		"build",
+		"readme.md"
+	],
+	"keywords": [
+		"validator"
+	],
+	"author": "Ademola Adegbuyi <ooade96@gmail.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"@babel/core": "^7.8.7",
+		"@babel/preset-env": "^7.6.2",
+		"@babel/preset-typescript": "^7.8.3",
+		"@rollup/plugin-commonjs": "^11.0.2",
+		"@rollup/plugin-node-resolve": "^7.1.1",
+		"@types/jest": "^24.0.18",
+		"@types/node": "^12.7.5",
+		"@types/tape": "^4.2.34",
+		"rollup": "^1.32.0",
+		"rollup-plugin-babel": "^4.3.3",
+		"rollup-plugin-terser": "^5.2.0",
+		"tap-spec": "^5.0.0",
+		"tape": "^4.13.2",
+		"ts-node": "^8.6.2",
+		"typescript": "^3.8.3"
+	},
+	"dependencies": {
+		"micro-typeof": "^0.1.0"
+	}
+}
