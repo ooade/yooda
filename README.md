@@ -21,6 +21,8 @@ npm add yooda
 ## Basic Usage
 
 ```js
+import validator from 'yooda;
+
 const requestBodySchema = {
 	name: {
 		type: 'string',
