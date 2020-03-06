@@ -1,6 +1,6 @@
 {
 	"name": "yooda",
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"description": "🧘‍♂️600b validation library with custom handlers and messages",
 	"source": "src/index.ts",
 	"main": "build/index.js",

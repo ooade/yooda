@@ -37,7 +37,7 @@ export type CustomErrorHandlers = {
 
 const validator = (
 	schema: Schema,
-	CustomErrorHandlers?: CustomErrorHandlers
+	customErrorHandlers?: CustomErrorHandlers
 ) => {
 	const handler: ProxyHandler<Data> = {
 		set(target, key: string, value: any) {
@@ -51,8 +51,8 @@ const validator = (
 
 			if (typeOf(value) !== type) {
 				throw new TypeError(
-					CustomErrorHandlers?.typeError
-						? CustomErrorHandlers.typeError({
+					customErrorHandlers?.typeError
+						? customErrorHandlers.typeError({
 								key,
 								type,
 								value: JSON.stringify(value)
@@ -65,8 +65,8 @@ const validator = (
 				domainArr.forEach(domain => {
 					if (!domain(value)) {
 						throw new Error(
-							CustomErrorHandlers?.domainError
-								? CustomErrorHandlers.domainError({
+							customErrorHandlers?.domainError
+								? customErrorHandlers.domainError({
 										key,
 										type,
 										value: JSON.stringify(value),
@@ -90,8 +90,8 @@ const validator = (
 
 			if (required && !data[key]) {
 				throw new Error(
-					CustomErrorHandlers?.requiredError
-						? CustomErrorHandlers.requiredError({ key })
+					customErrorHandlers?.requiredError
+						? customErrorHandlers.requiredError({ key })
 						: `${key} is required`
 				);
 			}
