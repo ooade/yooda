@@ -1,18 +1,28 @@
 import typeOf from 'micro-typeof';
 
-type Schema = {
+export interface Schema {
 	[key: string]: {
 		type: string;
 		required?: boolean;
 		domain?: ((value: any) => boolean)[];
 	};
-};
+}
 
-type Value = {
+interface Value {
 	[key: string]: unknown;
+}
+
+type CustomErrorTypes = 'requiredError' | 'typeError' | 'domainError';
+
+type CustomErrorProps = 'key' | 'type' | 'value' | 'domain';
+
+export type CustomErrors = {
+	[key in CustomErrorTypes]?: (
+		props: { [key in CustomErrorProps]?: any }
+	) => string;
 };
 
-const validator = (schema: Schema) => {
+const validator = (schema: Schema, customErrors?: CustomErrors) => {
 	const handler: ProxyHandler<Value> = {
 		set(target, key: string, value) {
 			const targetSchema = schema[key];
@@ -24,14 +34,29 @@ const validator = (schema: Schema) => {
 			const domainArr = targetSchema.domain;
 
 			if (typeOf(value) !== type) {
-				throw new TypeError(`${key} must be a ${type}`);
+				throw new TypeError(
+					customErrors?.typeError
+						? customErrors.typeError({
+								key,
+								type,
+								value: JSON.stringify(value)
+						  })
+						: `${key} must be a ${type}`
+				);
 			}
 
 			if (domainArr) {
 				domainArr.forEach(domain => {
 					if (!domain(value)) {
 						throw new Error(
-							`${value} does not satisfy the domain ${domain.name}`
+							customErrors?.domainError
+								? customErrors.domainError({
+										key,
+										type,
+										value: JSON.stringify(value),
+										domain: domain.name
+								  })
+								: `${value} does not satisfy the domain ${domain.name}`
 						);
 					}
 				});
@@ -48,7 +73,11 @@ const validator = (schema: Schema) => {
 			const required = schema[key].required;
 
 			if (required && !data[key]) {
-				throw new Error(`${key} is required`);
+				throw new Error(
+					customErrors?.requiredError
+						? customErrors.requiredError({ key })
+						: `${key} is required`
+				);
 			}
 		});
 

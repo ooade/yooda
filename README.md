@@ -1,6 +1,6 @@
 <p align="center">
   <h1 align="center">Yooda</h1>
-  <div align="center"><img src="./yoda.svg" width="200px" /></div>
+  <div align="center"><img src="https://raw.githubusercontent.com/ooade/yooda/master/yoda.svg?sanitize=true" alt="" width="200px" /></div>
   <p align="center">"Do or do not. There is no try." - Yoda</p>
   <p align="center">A tiny validation library for your app</p>
   <p align="center">

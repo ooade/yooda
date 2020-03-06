@@ -9,7 +9,7 @@
 	"types": "build/index.d.ts",
 	"scripts": {
 		"test": "ts-node node_modules/tape/bin/tape __test__/**/*.ts | tap-spec",
-		"build": "rollup -c rollup.config.js",
+		"build": "tsc && rollup -c rollup.config.js",
 		"prepublish": "npm test && npm run build"
 	},
 	"files": [
