@@ -29,13 +29,16 @@ export interface Schema {
 	[key: string]: SchemaBody;
 }
 
-export type CustomErrors = {
+export type CustomErrorHandlers = {
 	requiredError?: CustomErrorHandler<{ key: string }>;
 	typeError?: CustomErrorHandler<TypeErrorProps>;
 	domainError?: CustomErrorHandler<DomainErrorProps>;
 };
 
-const validator = (schema: Schema, customErrors?: CustomErrors) => {
+const validator = (
+	schema: Schema,
+	CustomErrorHandlers?: CustomErrorHandlers
+) => {
 	const handler: ProxyHandler<Data> = {
 		set(target, key: string, value: any) {
 			const targetSchema = schema[key];
@@ -48,8 +51,8 @@ const validator = (schema: Schema, customErrors?: CustomErrors) => {
 
 			if (typeOf(value) !== type) {
 				throw new TypeError(
-					customErrors?.typeError
-						? customErrors.typeError({
+					CustomErrorHandlers?.typeError
+						? CustomErrorHandlers.typeError({
 								key,
 								type,
 								value: JSON.stringify(value)
@@ -62,8 +65,8 @@ const validator = (schema: Schema, customErrors?: CustomErrors) => {
 				domainArr.forEach(domain => {
 					if (!domain(value)) {
 						throw new Error(
-							customErrors?.domainError
-								? customErrors.domainError({
+							CustomErrorHandlers?.domainError
+								? CustomErrorHandlers.domainError({
 										key,
 										type,
 										value: JSON.stringify(value),
@@ -87,8 +90,8 @@ const validator = (schema: Schema, customErrors?: CustomErrors) => {
 
 			if (required && !data[key]) {
 				throw new Error(
-					customErrors?.requiredError
-						? customErrors.requiredError({ key })
+					CustomErrorHandlers?.requiredError
+						? CustomErrorHandlers.requiredError({ key })
 						: `${key} is required`
 				);
 			}

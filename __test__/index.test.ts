@@ -1,5 +1,5 @@
 import test from 'tape';
-import validator, { CustomErrors, Schema } from '../src';
+import validator, { CustomErrorHandlers, Schema } from '../src';
 
 const domains = {
 	IS_INTEGER: (value: number) => Number.isInteger(value),
@@ -79,12 +79,12 @@ test('should use custom required error message', t => {
 		}
 	};
 
-	const customErrors: CustomErrors = {
+	const CustomErrorHandlers: CustomErrorHandlers = {
 		requiredError: ({ key }) => `You need to pass the required value for ${key}`
 	};
 
 	try {
-		const validate = validator(schema, customErrors);
+		const validate = validator(schema, CustomErrorHandlers);
 		validate({ height: 2 });
 	} catch (err) {
 		t.equal(
@@ -107,13 +107,13 @@ test('should use custom type error message', t => {
 		}
 	};
 
-	const customErrors: CustomErrors = {
+	const CustomErrorHandlers: CustomErrorHandlers = {
 		typeError: ({ value, type }) =>
 			`You passed the wrong type (${type}) with value (${value})`
 	};
 
 	try {
-		const validate = validator(schema, customErrors);
+		const validate = validator(schema, CustomErrorHandlers);
 		validate({ age: '12', height: 2 });
 	} catch (err) {
 		t.equal(
@@ -137,13 +137,13 @@ test('should use custom domain error message', t => {
 		}
 	};
 
-	const customErrors: CustomErrors = {
+	const CustomErrorHandlers: CustomErrorHandlers = {
 		domainError: ({ value, domain }) =>
 			`${value} doesn't satify the ${domain} requirement`
 	};
 
 	try {
-		const validate = validator(schema, customErrors);
+		const validate = validator(schema, CustomErrorHandlers);
 		validate({ age: -1, height: 2 });
 	} catch (err) {
 		t.equal(

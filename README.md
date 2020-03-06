@@ -94,12 +94,12 @@ const schema: Schema = {
 	}
 };
 
-const customErrors: CustomErrors = {
+const CustomErrorHandlers: CustomErrorHandlers = {
 	domainError: ({ value, domain }) =>
 		`${value} doesn't satify the ${domain} requirement`
 };
 
-const validate = validator(schema, customErrors);
+const validate = validator(schema, CustomErrorHandlers);
 ```
 
 **Props available to the error types:**
