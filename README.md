@@ -1,6 +1,6 @@
 <p align="center">
   <h1 align="center">Yooda</h1>
-  <div align="center"><img src="https://raw.githubusercontent.com/ooade/yooda/master/yoda.svg?sanitize=true" alt="" width="200px" /></div>
+  <p align="center"><img src="https://raw.githubusercontent.com/ooade/yooda/master/yoda.svg?sanitize=true" alt="" width="200px" /></p>
   <p align="center">"Do or do not. There is no try." - Yoda</p>
   <p align="center">A tiny validation library for your app</p>
   <p align="center">
@@ -18,7 +18,7 @@
 - [Basic Usage](#basic-usage)
 - [Extras](#extras)
   - [Domain](#domain)
-  - [Custom Error](#custom-error)
+  - [Custom Error Messages](#custom-error-messages)
 
 ### Installation
 
@@ -81,7 +81,7 @@ validate(requestBody);
 
 The convention you decide to pick is up to you. In the test files, we have an object of domains with camel case names. Whatever works best for you!
 
-#### Custom Errors
+#### Custom Error Messages
 
 You could define how errors will be thrown based on the supported error types (requiredError, typeError, and domainError), and it's very easy to use! A short example:
 
