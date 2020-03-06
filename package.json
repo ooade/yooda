@@ -1,7 +1,7 @@
 {
 	"name": "yooda",
-	"version": "0.2.1",
-	"description": "A tiny validation library for your app",
+	"version": "0.2.2",
+	"description": "🧘‍♂️600b validation library with custom handlers and messages",
 	"source": "src/index.ts",
 	"main": "build/index.js",
 	"module": "build/yooda.module.js",
@@ -17,7 +17,8 @@
 		"readme.md"
 	],
 	"keywords": [
-		"validator"
+		"validator",
+		"validation"
 	],
 	"author": "Ademola Adegbuyi <ooade96@gmail.com>",
 	"license": "MIT",

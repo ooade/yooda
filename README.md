@@ -2,7 +2,7 @@
   <h1 align="center">Yooda</h1>
   <p align="center"><img src="https://raw.githubusercontent.com/ooade/yooda/master/yoda.svg?sanitize=true" alt="" width="200px" /></p>
   <p align="center">"Do or do not. There is no try." - Yoda</p>
-  <p align="center">A tiny validation library for your app</p>
+  <p align="center">🧘‍♂️600b validation library with custom handlers and messages.</p>
   <p align="center">
   <a href="https://www.npmjs.org/package/yooda"><img src="https://img.shields.io/npm/v/yooda.svg?style=flat-square" alt="npm"></a>
   <a href="https://travis-ci.org/ooade/yooda"><img src="https://img.shields.io/travis/ooade/yooda.svg?style=flat-square" alt="travis"></a>
@@ -29,7 +29,7 @@ npm add yooda
 ### Basic Usage
 
 ```js
-import validator from 'yooda;
+import validator from 'yooda';
 
 const requestBodySchema = {
 	name: {
