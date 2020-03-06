@@ -12,13 +12,21 @@
   </p>
 </p>
 
-## Installation
+## Contents
+
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+- [Extras](#extras)
+  - [Domain](#domain)
+  - [Custom Error](#custom-error)
+
+### Installation
 
 ```sh
 npm add yooda
 ```
 
-## Basic Usage
+### Basic Usage
 
 ```js
 import validator from 'yooda;
@@ -51,7 +59,9 @@ That's it, really. If the value doesn't meet the requirement, it throws an error
 
 ### Extras
 
-- Domain: This is more like a plugin, to ensure some other personal requirements are met asides from the regular "required" and "type". We definitely cannot offer all kinds of edge-cases so we're giving you a buffet; Be your own boss, control the nature of the validation.
+#### Domain
+
+This is more like a plugin, to ensure some other personal requirements are met asides from the regular "required" and "type". We definitely cannot offer all kinds of edge-cases so we're giving you a buffet; Be your own boss, control the nature of the validation.
 
 Here's how to use it:
 
@@ -69,7 +79,51 @@ const validate = validator(requestBodySchema);
 validate(requestBody);
 ```
 
-The convention you decide to pick is up to you. In the test files, we have an object of domains with camel case names. Whatever works best for you 😉
+The convention you decide to pick is up to you. In the test files, we have an object of domains with camel case names. Whatever works best for you!
+
+#### Custom Errors
+
+You could define how errors will be thrown based on the supported error types (requiredError, typeError, and domainError), and it's very easy to use! A short example:
+
+```ts
+const schema: Schema = {
+	age: {
+		type: 'number',
+		required: true,
+		domain: [domains.IS_POSITIVE]
+	}
+};
+
+const customErrors: CustomErrors = {
+	domainError: ({ value, domain }) =>
+		`${value} doesn't satify the ${domain} requirement`
+};
+
+const validate = validator(schema, customErrors);
+```
+
+**Props available to the error types:**
+
+Note that: only the props required will be suggested to you via intellisense 🙏
+
+```ts
+type RequiredErrorProps = {
+	key: string;
+};
+
+type TypeErrorProps = {
+	key: string;
+	type: string;
+	value: any;
+};
+
+type DomainErrorProps = {
+	key: string;
+	type: string;
+	value: any;
+	domain: string;
+};
+```
 
 ## LICENSE
 

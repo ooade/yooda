@@ -1,30 +1,43 @@
 import typeOf from 'micro-typeof';
 
-export interface Schema {
-	[key: string]: {
-		type: string;
-		required?: boolean;
-		domain?: ((value: any) => boolean)[];
-	};
-}
+type CustomErrorHandler<K> = (props: K) => string;
 
-interface Value {
+type TypeErrorProps = {
+	key: string;
+	type: string;
+	value: any;
+};
+
+type DomainErrorProps = {
+	key: string;
+	type: string;
+	value: any;
+	domain: string;
+};
+
+type SchemaBody = {
+	type: string;
+	required?: boolean;
+	domain?: ((value: any) => boolean)[];
+};
+
+interface Data {
 	[key: string]: unknown;
 }
 
-type CustomErrorTypes = 'requiredError' | 'typeError' | 'domainError';
-
-type CustomErrorProps = 'key' | 'type' | 'value' | 'domain';
+export interface Schema {
+	[key: string]: SchemaBody;
+}
 
 export type CustomErrors = {
-	[key in CustomErrorTypes]?: (
-		props: { [key in CustomErrorProps]?: any }
-	) => string;
+	requiredError?: CustomErrorHandler<{ key: string }>;
+	typeError?: CustomErrorHandler<TypeErrorProps>;
+	domainError?: CustomErrorHandler<DomainErrorProps>;
 };
 
 const validator = (schema: Schema, customErrors?: CustomErrors) => {
-	const handler: ProxyHandler<Value> = {
-		set(target, key: string, value) {
+	const handler: ProxyHandler<Data> = {
+		set(target, key: string, value: any) {
 			const targetSchema = schema[key];
 
 			// Can't trap without a schema
@@ -66,7 +79,7 @@ const validator = (schema: Schema, customErrors?: CustomErrors) => {
 		}
 	};
 
-	return (data: Value): void => {
+	return (data: Data): void => {
 		const proxy = new Proxy({}, handler);
 
 		Object.keys(schema).forEach(key => {
