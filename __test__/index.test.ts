@@ -7,7 +7,7 @@ const domains = {
 };
 
 enum schemaKeys {
-	ageOnly = "ageOnly",
+	ageRequired = "ageRequired",
 	ageRequiredAndHeight = "ageRequiredAndHeight",
 	agePositiveDomainRequiredAndHeight = "agePositiveDomainRequiredAndHeight"
 }
@@ -17,7 +17,7 @@ type Schemas = {
 };
 
 const schemas: Schemas = {
-	ageOnly: {
+	ageRequired: {
 		age: {
 			type: "number",
 			required: true
@@ -62,7 +62,7 @@ test("should throw error when a required data isn't supplied", t => {
 
 test("should throw error when a required data type isn't supplied", t => {
 	try {
-		const validate = validator(schemas.ageOnly);
+		const validate = validator(schemas.ageRequired);
 		validate({ age: "3" });
 	} catch (err) {
 		t.equal(
