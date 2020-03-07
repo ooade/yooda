@@ -6,8 +6,24 @@ const domains = {
 	IS_POSITIVE: (value: number) => domains.IS_INTEGER && value > 0
 };
 
-test("should not throw error with the right data types and schema", t => {
-	const schema: Schema = {
+enum schemaKeys {
+	ageOnly = "ageOnly",
+	ageRequiredAndHeight = "ageRequiredAndHeight",
+	agePositiveDomainRequiredAndHeight = "agePositiveDomainRequiredAndHeight"
+}
+
+type Schemas = {
+	[key in schemaKeys]: Schema;
+};
+
+const schemas: Schemas = {
+	ageOnly: {
+		age: {
+			type: "number",
+			required: true
+		}
+	},
+	ageRequiredAndHeight: {
 		age: {
 			type: "number",
 			required: true
@@ -15,26 +31,28 @@ test("should not throw error with the right data types and schema", t => {
 		height: {
 			type: "number"
 		}
-	};
+	},
+	agePositiveDomainRequiredAndHeight: {
+		age: {
+			type: "number",
+			required: true,
+			domain: [domains.IS_POSITIVE]
+		},
+		height: {
+			type: "number"
+		}
+	}
+};
 
-	const validate = validator(schema);
+test("should not throw error with the right data types and schema", t => {
+	const validate = validator(schemas.ageRequiredAndHeight);
 	t.doesNotThrow(() => validate({ age: 2, height: 3 }));
 	t.end();
 });
 
 test("should throw error when a required data isn't supplied", t => {
-	const schema: Schema = {
-		age: {
-			type: "number",
-			required: true
-		},
-		height: {
-			type: "number"
-		}
-	};
-
 	try {
-		const validate = validator(schema);
+		const validate = validator(schemas.ageRequiredAndHeight);
 		validate({ height: 3 });
 	} catch (err) {
 		t.equal(err.message, "age is required", "returns the right message");
@@ -43,15 +61,8 @@ test("should throw error when a required data isn't supplied", t => {
 });
 
 test("should throw error when a required data type isn't supplied", t => {
-	const schema: Schema = {
-		age: {
-			type: "number",
-			required: true
-		}
-	};
-
 	try {
-		const validate = validator(schema);
+		const validate = validator(schemas.ageOnly);
 		validate({ age: "3" });
 	} catch (err) {
 		t.equal(
@@ -64,19 +75,8 @@ test("should throw error when a required data type isn't supplied", t => {
 });
 
 test("should throw error when a value does not meet one of the domain's requirement", t => {
-	const schema: Schema = {
-		age: {
-			type: "number",
-			required: true,
-			domain: [domains.IS_POSITIVE]
-		},
-		height: {
-			type: "number"
-		}
-	};
-
 	try {
-		const validate = validator(schema);
+		const validate = validator(schemas.agePositiveDomainRequiredAndHeight);
 		validate({ age: -3 });
 	} catch (err) {
 		t.equal(
@@ -89,23 +89,15 @@ test("should throw error when a value does not meet one of the domain's requirem
 });
 
 test("should use custom required error message", t => {
-	const schema: Schema = {
-		age: {
-			type: "number",
-			required: true,
-			domain: [domains.IS_POSITIVE]
-		},
-		height: {
-			type: "number"
-		}
-	};
-
 	const CustomErrorHandlers: CustomErrorHandlers = {
 		requiredError: ({ key }) => `You need to pass the required value for ${key}`
 	};
 
 	try {
-		const validate = validator(schema, CustomErrorHandlers);
+		const validate = validator(
+			schemas.agePositiveDomainRequiredAndHeight,
+			CustomErrorHandlers
+		);
 		validate({ height: 2 });
 	} catch (err) {
 		t.equal(
@@ -118,23 +110,16 @@ test("should use custom required error message", t => {
 });
 
 test("should use custom type error message", t => {
-	const schema: Schema = {
-		age: {
-			type: "number",
-			required: true
-		},
-		height: {
-			type: "number"
-		}
-	};
-
 	const CustomErrorHandlers: CustomErrorHandlers = {
 		typeError: ({ value, type }) =>
 			`You passed the wrong type (${type}) with value (${value})`
 	};
 
 	try {
-		const validate = validator(schema, CustomErrorHandlers);
+		const validate = validator(
+			schemas.ageRequiredAndHeight,
+			CustomErrorHandlers
+		);
 		validate({ age: "12", height: 2 });
 	} catch (err) {
 		t.equal(
@@ -147,24 +132,16 @@ test("should use custom type error message", t => {
 });
 
 test("should use custom domain error message", t => {
-	const schema: Schema = {
-		age: {
-			type: "number",
-			required: true,
-			domain: [domains.IS_POSITIVE]
-		},
-		height: {
-			type: "number"
-		}
-	};
-
 	const CustomErrorHandlers: CustomErrorHandlers = {
 		domainError: ({ value, domain }) =>
 			`${value} doesn't satify the ${domain} requirement`
 	};
 
 	try {
-		const validate = validator(schema, CustomErrorHandlers);
+		const validate = validator(
+			schemas.agePositiveDomainRequiredAndHeight,
+			CustomErrorHandlers
+		);
 		validate({ age: -1, height: 2 });
 	} catch (err) {
 		t.equal(
