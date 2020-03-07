@@ -1,5 +1,5 @@
 import test from "tape";
-import validator, { CustomErrorHandlers, Schema } from "../src";
+import yooda, { CustomErrorHandlers, Schema } from "../src";
 
 const domains = {
 	IS_INTEGER: (value: number) => Number.isInteger(value),
@@ -45,14 +45,14 @@ const schemas: Schemas = {
 };
 
 test("should not throw error with the right data types and schema", t => {
-	const validate = validator(schemas.ageRequiredAndHeight);
+	const validate = yooda(schemas.ageRequiredAndHeight);
 	t.doesNotThrow(() => validate({ age: 2, height: 3 }));
 	t.end();
 });
 
 test("should throw error when a required data isn't supplied", t => {
 	try {
-		const validate = validator(schemas.ageRequiredAndHeight);
+		const validate = yooda(schemas.ageRequiredAndHeight);
 		validate({ height: 3 });
 	} catch (err) {
 		t.equal(err.message, "age is required", "returns the right message");
@@ -62,7 +62,7 @@ test("should throw error when a required data isn't supplied", t => {
 
 test("should throw error when a required data type isn't supplied", t => {
 	try {
-		const validate = validator(schemas.ageRequired);
+		const validate = yooda(schemas.ageRequired);
 		validate({ age: "3" });
 	} catch (err) {
 		t.equal(
@@ -76,7 +76,7 @@ test("should throw error when a required data type isn't supplied", t => {
 
 test("should throw error when a value does not meet one of the domain's requirement", t => {
 	try {
-		const validate = validator(schemas.agePositiveDomainRequiredAndHeight);
+		const validate = yooda(schemas.agePositiveDomainRequiredAndHeight);
 		validate({ age: -3 });
 	} catch (err) {
 		t.equal(
@@ -94,7 +94,7 @@ test("should use custom required error message", t => {
 	};
 
 	try {
-		const validate = validator(
+		const validate = yooda(
 			schemas.agePositiveDomainRequiredAndHeight,
 			CustomErrorHandlers
 		);
@@ -116,10 +116,7 @@ test("should use custom type error message", t => {
 	};
 
 	try {
-		const validate = validator(
-			schemas.ageRequiredAndHeight,
-			CustomErrorHandlers
-		);
+		const validate = yooda(schemas.ageRequiredAndHeight, CustomErrorHandlers);
 		validate({ age: "12", height: 2 });
 	} catch (err) {
 		t.equal(
@@ -138,7 +135,7 @@ test("should use custom domain error message", t => {
 	};
 
 	try {
-		const validate = validator(
+		const validate = yooda(
 			schemas.agePositiveDomainRequiredAndHeight,
 			CustomErrorHandlers
 		);
@@ -164,7 +161,7 @@ test("should throw an error if the domain is not an array", t => {
 	};
 
 	try {
-		const validate = validator(schema);
+		const validate = yooda(schema);
 		validate({ age: 10 });
 	} catch (err) {
 		t.equal(
@@ -187,14 +184,38 @@ test("should throw an error if one of the domains isn't a function", t => {
 	};
 
 	try {
-		const validate = validator(schema);
+		const validate = yooda(schema);
 		validate({ age: 2 });
 	} catch (err) {
 		t.equal(
 			err.message,
-			"domain is not a function",
+			"currentDomain is not a function",
 			"returns the right message"
 		);
 	}
+	t.end();
+});
+
+test("should throw an error if no schema is passed", t => {
+	try {
+		// @ts-ignore
+		const validate = yooda();
+		validate({ age: 2 });
+	} catch (err) {
+		t.equal(
+			err.message,
+			"Schema object not found!",
+			"returns the right message"
+		);
+	}
+	t.end();
+});
+
+test("should return back the validated data", t => {
+	const validate = yooda(schemas.ageRequiredAndHeight);
+	const validated = validate({ age: 3, height: 4.5 });
+
+	t.equal(validated.age, 3);
+	t.equal(validated.height, 4.5);
 	t.end();
 });

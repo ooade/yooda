@@ -40,13 +40,7 @@ const validator = (
 ) => {
 	const handler: ProxyHandler<Data> = {
 		set(target, key: string, value: any) {
-			const targetSchema = schema[key];
-
-			// Can't trap without a schema
-			if (!targetSchema) return true;
-
-			const type = targetSchema.type;
-			const domainArr = targetSchema.domain;
+			const { type, domain } = schema[key];
 
 			if (typeOf(value) !== type) {
 				throw new TypeError(
@@ -60,32 +54,37 @@ const validator = (
 				);
 			}
 
-			if (domainArr && typeOf(domainArr) !== "array") {
+			if (domain && typeOf(domain) !== "array") {
 				throw new Error(`The domain set on ${key} is expected to be an array`);
 			}
 
-			if (domainArr) {
-				domainArr.forEach(domain => {
-					if (!domain(value)) {
+			if (domain) {
+				domain.forEach(currentDomain => {
+					if (!currentDomain(value)) {
 						throw new Error(
 							customErrorHandlers?.domainError
 								? customErrorHandlers.domainError({
 										key,
 										value: JSON.stringify(value),
-										domain: domain.name
+										domain: currentDomain.name
 								  })
-								: `${value} assigned to ${key} does not satisfy the ${domain.name} domain`
+								: `${value} assigned to ${key} does not satisfy the ${currentDomain.name} domain`
 						);
 					}
 				});
 			}
 
+			target[key] = value;
 			return true;
 		}
 	};
 
-	return (data: Data): void => {
+	return (data: Data) => {
 		const proxy = new Proxy({}, handler);
+
+		if (!(schema && typeOf(schema) === "object")) {
+			throw new Error("Schema object not found!");
+		}
 
 		Object.keys(schema).forEach(key => {
 			const required = schema[key].required;
@@ -102,6 +101,8 @@ const validator = (
 		Object.keys(data).forEach(key => {
 			proxy[key] = data[key];
 		});
+
+		return proxy;
 	};
 };
 
