@@ -1,4 +1,4 @@
-import typeOf from 'micro-typeof';
+import typeOf from "micro-typeof";
 
 type CustomErrorHandler<K> = (props: K) => string;
 
@@ -10,7 +10,6 @@ type TypeErrorProps = {
 
 type DomainErrorProps = {
 	key: string;
-	type: string;
 	value: any;
 	domain: string;
 };
@@ -57,8 +56,12 @@ const validator = (
 								type,
 								value: JSON.stringify(value)
 						  })
-						: `${key} must be a ${type}`
+						: `${key} is expected to be of type "${type}"`
 				);
+			}
+
+			if (domainArr && typeOf(domainArr) !== "array") {
+				throw new Error(`The domain set on ${key} is expected to be an array`);
 			}
 
 			if (domainArr) {
@@ -68,11 +71,10 @@ const validator = (
 							customErrorHandlers?.domainError
 								? customErrorHandlers.domainError({
 										key,
-										type,
 										value: JSON.stringify(value),
 										domain: domain.name
 								  })
-								: `${value} does not satisfy the domain ${domain.name}`
+								: `${value} assigned to ${key} does not satisfy the ${domain.name} domain`
 						);
 					}
 				});

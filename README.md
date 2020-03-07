@@ -29,21 +29,21 @@ npm add yooda
 ### Basic Usage
 
 ```js
-import validator from 'yooda';
+import validator from "yooda";
 
 const requestBodySchema = {
 	name: {
-		type: 'string',
+		type: "string",
 		required: true
 	},
 	age: {
-		type: 'number',
+		type: "number",
 		required: true
 	}
 };
 
 const requestBody = {
-	name: 'Ademola Adegbuyi',
+	name: "Ademola Adegbuyi",
 	age: 23
 };
 
@@ -66,11 +66,11 @@ This is more like a plugin, to ensure some other personal requirements are met a
 Here's how to use it:
 
 ```js
-const shouldStartWithA = value => value.startsWith('a');
+const shouldStartWithA = value => value.startsWith("a");
 // attach it to your schema
 const requestBodySchema = {
 	name: {
-		type: 'string',
+		type: "string",
 		required: true,
 		domain: [shouldStartWithA]
 	}
@@ -88,7 +88,7 @@ You could define how errors will be thrown based on the supported error types (r
 ```ts
 const schema: Schema = {
 	age: {
-		type: 'number',
+		type: "number",
 		required: true,
 		domain: [domains.IS_POSITIVE]
 	}

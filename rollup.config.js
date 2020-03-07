@@ -1,17 +1,17 @@
-import fs from 'fs';
-import babel from 'rollup-plugin-babel';
-import commonjs from '@rollup/plugin-commonjs';
-import resolve from '@rollup/plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
+import fs from "fs";
+import babel from "rollup-plugin-babel";
+import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
+import { terser } from "rollup-plugin-terser";
 
-let pkg = JSON.parse(fs.readFileSync('./package.json', { encoding: 'utf-8' }));
+let pkg = JSON.parse(fs.readFileSync("./package.json", { encoding: "utf-8" }));
 
 export default {
 	input: pkg.source,
 	plugins: [
 		babel({
-			exclude: 'node_modules/**',
-			extensions: ['.js', '.ts']
+			exclude: "node_modules/**",
+			extensions: [".js", ".ts"]
 		}),
 		resolve(),
 		commonjs(),
@@ -20,18 +20,18 @@ export default {
 	output: [
 		{
 			file: pkg.main,
-			format: 'cjs',
+			format: "cjs",
 			sourcemap: true
 		},
 		{
 			file: pkg.module,
-			format: 'es',
+			format: "es",
 			sourcemap: true
 		},
 		{
-			name: 'yooda',
+			name: "yooda",
 			file: pkg.umd,
-			format: 'umd',
+			format: "umd",
 			sourcemap: true
 		}
 	]
