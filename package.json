@@ -1,6 +1,6 @@
 {
   "name": "yooda",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "🧘‍♂️600b validation library with custom handlers and messages",
   "source": "src/index.ts",
   "main": "build/index.js",
@@ -20,6 +20,13 @@
     "validator",
     "validation"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ooade/yooda.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ooade/yooda/issues"
+  },
   "author": "Ademola Adegbuyi <ooade96@gmail.com>",
   "license": "MIT",
   "devDependencies": {

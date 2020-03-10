@@ -51,7 +51,7 @@ try {
 	const validate = validator(requestBodySchema);
 	validate(requestBody);
 } catch (err) {
-	// Handle error properly
+	res.status(500).send(err);
 }
 ```
 
@@ -61,7 +61,7 @@ That's it, really. If the value doesn't meet the requirement, it throws an error
 
 #### Domain
 
-This is more like a plugin, to ensure some other personal requirements are met asides from the regular "required" and "type". We definitely cannot offer all kinds of edge-cases so we're giving you a buffet; Be your own boss, control the nature of the validation.
+This is more like a plugin, to ensure some other personal requirements are met asides from the regular "required" and "type". We definitely cannot offer a way to solve all kinds of edge-cases so we're giving you a buffet; Be your own boss, control the nature of the validation.
 
 Here's how to use it:
 
@@ -79,7 +79,7 @@ const validate = validator(requestBodySchema);
 validate(requestBody);
 ```
 
-The convention you decide to pick is up to you. In the test files, we have an object of domains with camel case names. Whatever works best for you!
+The convention you decide to pick is up to you. The one used in the example above is a function that is used on the fly. You could just create an object of domains as done in the test file. You could also have them in a separate file and import only the ones needed.
 
 #### Custom Error Messages
 
