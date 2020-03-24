@@ -17,6 +17,7 @@ type DomainErrorProps = {
 type SchemaBody = {
 	type: string;
 	required?: boolean;
+	transform?: (value: any) => any;
 	domain?: ((value: any) => boolean)[];
 };
 
@@ -40,7 +41,7 @@ const validator = (
 ) => {
 	const handler: ProxyHandler<Data> = {
 		set(target, key: string, value: any) {
-			const { type, domain } = schema[key];
+			const { type, domain, transform } = schema[key];
 
 			if (typeOf(value) !== type) {
 				throw new TypeError(
@@ -72,6 +73,10 @@ const validator = (
 						);
 					}
 				});
+			}
+
+			if (transform) {
+				value = transform(value);
 			}
 
 			target[key] = value;

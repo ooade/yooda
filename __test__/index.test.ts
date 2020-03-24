@@ -9,6 +9,7 @@ const domains = {
 enum schemaKeys {
 	ageRequired = "ageRequired",
 	ageRequiredAndHeight = "ageRequiredAndHeight",
+	ageStringTransformRequired = "ageStringTransformRequired",
 	agePositiveDomainRequiredAndHeight = "agePositiveDomainRequiredAndHeight"
 }
 
@@ -21,6 +22,13 @@ const schemas: Schemas = {
 		age: {
 			type: "number",
 			required: true
+		}
+	},
+	ageStringTransformRequired: {
+		age: {
+			type: "string",
+			required: true,
+			transform: value => parseInt(value, 10)
 		}
 	},
 	ageRequiredAndHeight: {
@@ -217,5 +225,15 @@ test("should return back the validated data", t => {
 
 	t.equal(validated.age, 3);
 	t.equal(validated.height, 4.5);
+	t.end();
+});
+
+test("should transform values if needed", t => {
+	const validate = yooda(schemas.ageStringTransformRequired);
+	let value = { age: "3" };
+	const validated = validate(value);
+
+	t.equal(validated.age, 3);
+	t.equal(value.age, "3");
 	t.end();
 });
